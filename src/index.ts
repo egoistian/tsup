@@ -354,13 +354,14 @@ export async function build(_options: Options) {
                     nodeOptions: { shell: true, stdio: 'inherit' },
                   })
 
-                  await onSuccessProcess
-                  if (
-                    onSuccessProcess.exitCode &&
-                    onSuccessProcess.exitCode !== 0
-                  ) {
-                    process.exitCode = onSuccessProcess.exitCode
+                  const processExitHandler = async () => {
+                    const result = await onSuccessProcess
+
+                    if (result?.exitCode && result?.exitCode !== 0) {
+                      process.exitCode = result.exitCode
+                    }
                   }
+                  processExitHandler()
                 }
               }
             }
